@@ -1,4 +1,4 @@
-# 🌕 Ay İniş Navigatörü 3.0
+# 🌕 Ay İniş Navigatörü 3.2 / Lunar Landing Navigator 3.2
 
 **NASA Space Apps Challenge – Eskişehir**
 
@@ -13,7 +13,17 @@ Ay'ın yakın yüzünde seçilen bir noktanın inişe ne kadar uygun olduğunu, 
 3. Visual Studio'da **File → Open → Project/Solution** yolunu izleyip `AyInisNavigatoru.csproj` dosyasını seçin.
 4. **F5** ile çalıştırın. Bir pencere açılır.
 
-## Ekran düzeni (sürüm 3.0)
+## 🌐 İki dil: Türkçe / English (3.1)
+
+Araç çubuğunun sağındaki **🌐 English / 🌐 Türkçe** düğmesi uygulamanın dilini anında değiştirir.
+The **🌐** button at the right end of the toolbar switches the whole application between Turkish and English.
+
+- Menüler, açıklamalar, ipuçları, rapor, karşılaştırma tablosu, ısı haritası lejantı, tarayıcı raporu ve günlük mesajları iki dillidir.
+- Daha önce analiz edilmiş noktaların raporları da yeni dile çevrilir (veri yeniden indirilmez).
+- Seçilen dil `dil.txt` dosyasına kaydedilir ve program bir sonraki açılışta aynı dille başlar.
+- Yeni metin eklerken: `L.T("Türkçe metin", "English text")` (bkz. `Localization.cs`).
+
+## Ekran düzeni (sürüm 3.1)
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────────┐

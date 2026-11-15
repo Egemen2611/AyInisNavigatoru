@@ -28,9 +28,9 @@ public sealed class LandingNavigator : IDisposable
         var src = await GetSourceAsync(Config.LolaBaseUrl, product);
         if (src == null) return null;
         double mb = src.Lines * src.LineBytes / 1024.0 / 1024.0;
-        Log($"Harita için {product} indiriliyor (~{mb:F0} MB, yalnızca ilk seferde)...");
+        Log(L.T($"Harita için {product} indiriliyor (~{mb:F0} MB, yalnızca ilk seferde)...", $"Downloading {product} for the map (~{mb:F0} MB, first time only)..."));
         try { return await src.ReadRowsAsync(0, src.Lines - 1); }
-        catch (Exception ex) { Log($"UYARI: {product} haritası okunamadı → {ex.Message}"); return null; }
+        catch (Exception ex) { Log(L.T($"UYARI: {product} haritası okunamadı → {ex.Message}", $"WARNING: could not read {product} map → {ex.Message}")); return null; }
     }
 
     private async Task<PdsImageSource?> GetSourceAsync(string baseUrl, string product)
@@ -38,15 +38,15 @@ public sealed class LandingNavigator : IDisposable
         if (_sources.TryGetValue(product, out var cached)) return cached;
         try
         {
-            Log($"{product} etiketi okunuyor ({new Uri(baseUrl).Host})...");
+            Log(L.T($"{product} etiketi okunuyor ({new Uri(baseUrl).Host})...", $"Reading {product} label ({new Uri(baseUrl).Host})..."));
             var src = await PdsImageSource.OpenAsync(_http, baseUrl, product, Config.CacheDirectory);
-            Log($"{product}: {src.Samples}×{src.Lines} piksel, {src.Resolution} piksel/derece, {src.SampleType}");
+            Log(L.T($"{product}: {src.Samples}×{src.Lines} piksel, {src.Resolution} piksel/derece, {src.SampleType}", $"{product}: {src.Samples}×{src.Lines} pixels, {src.Resolution} pixels/degree, {src.SampleType}"));
             _sources[product] = src;
             return src;
         }
         catch (Exception ex)
         {
-            Log($"UYARI: {product} açılamadı → {ex.Message}");
+            Log(L.T($"UYARI: {product} açılamadı → {ex.Message}", $"WARNING: could not open {product} → {ex.Message}"));
             _sources[product] = null;
             return null;
         }
@@ -57,11 +57,11 @@ public sealed class LandingNavigator : IDisposable
         var (row, _) = src.ToPixel(site.LatitudeDeg, site.Lon360);
         int r = (int)Math.Round(row);
         double mb = (2 * halfRows + 1) * src.LineBytes / 1024.0 / 1024.0;
-        Log($"{src.Name}: {2 * halfRows + 1} satır indiriliyor (~{mb:F1} MB, önbellekte varsa indirilmez)...");
+        Log(L.T($"{src.Name}: {2 * halfRows + 1} satır indiriliyor (~{mb:F1} MB, önbellekte varsa indirilmez)...", $"{src.Name}: downloading {2 * halfRows + 1} rows (~{mb:F1} MB, skipped if cached)..."));
         try { return await src.ReadRowsAsync(r - halfRows, r + halfRows); }
         catch (Exception ex)
         {
-            Log($"UYARI: {src.Name} verisi okunamadı → {ex.Message}");
+            Log(L.T($"UYARI: {src.Name} verisi okunamadı → {ex.Message}", $"WARNING: could not read {src.Name} data → {ex.Message}"));
             return null;
         }
     }
@@ -74,7 +74,7 @@ public sealed class LandingNavigator : IDisposable
         var ev = new SiteEvaluation { Site = site, EvaluatedAtUtc = DateTime.UtcNow };
 
         // ---------- 1) LOLA yüksek çözünürlüklü DEM: eğim, pürüzlülük, kraterler ----------
-        Log("▶ LRO LOLA yükseklik verisi alınıyor...");
+        Log(L.T("▶ LRO LOLA yükseklik verisi alınıyor...", "▶ Fetching LRO LOLA elevation data..."));
         RasterBlock? demHigh = null;
         var lolaHigh = await GetSourceAsync(Config.LolaBaseUrl, Config.LolaDemHighRes);
         if (lolaHigh != null) demHigh = await ReadAroundAsync(lolaHigh, site, Config.HighResBlockHalfRows);
@@ -93,7 +93,7 @@ public sealed class LandingNavigator : IDisposable
         var demForHorizon = demLow ?? demHigh;
         if (demForHorizon != null)
         {
-            Log("Ufuk profili hesaplanıyor (36 yön, 30 km)...");
+            Log(L.T("Ufuk profili hesaplanıyor (36 yön, 30 km)...", "Computing horizon profile (36 directions, 30 km)..."));
             ev.Horizon = TerrainAnalyzer.ComputeHorizon(demForHorizon, site);
             if (demForHorizon != demForTerrain)
                 ev.DataSources.Add($"LRO LOLA {demForHorizon.Source.Name} — {demForHorizon.Source.ImageUrl}");
@@ -101,11 +101,11 @@ public sealed class LandingNavigator : IDisposable
         else
         {
             ev.Horizon = new HorizonProfile { IsFlatAssumption = true, DemProduct = "yok" };
-            ev.Warnings.Add("Ufuk profili için DEM alınamadı; arazi düz kabul edildi.");
+            ev.WarningTexts.Add(new[] { "Ufuk profili için DEM alınamadı; arazi düz kabul edildi.", "No DEM available for the horizon profile; terrain assumed flat." });
         }
 
         // ---------- 3) Diviner kaya yoğunluğu ----------
-        Log("▶ LRO Diviner kaya yoğunluğu verisi alınıyor...");
+        Log(L.T("▶ LRO Diviner kaya yoğunluğu verisi alınıyor...", "▶ Fetching LRO Diviner rock abundance data..."));
         var raSrc = await GetSourceAsync(Config.DivinerBaseUrl, Config.DivinerRockAbundance);
         if (raSrc != null)
         {
@@ -114,14 +114,14 @@ public sealed class LandingNavigator : IDisposable
             {
                 ev.Rocks = ComputeRockStats(block, site, ellipseRadiusM);
                 if (ev.Rocks != null)
-                    ev.DataSources.Add($"LRO Diviner kaya yoğunluğu (Bandfield vd. 2011) — {raSrc.ImageUrl}");
+                    ev.DataSources.Add($"LRO Diviner rock abundance (Bandfield et al. 2011) — {raSrc.ImageUrl}");
                 else
-                    ev.Warnings.Add("Diviner kaya yoğunluğu bu nokta için boş (harita ±70-80° enlem ile sınırlı olabilir).");
+                    ev.WarningTexts.Add(new[] { "Diviner kaya yoğunluğu bu nokta için boş (harita ±70-80° enlem ile sınırlı olabilir).", "Diviner rock abundance is empty for this site (the map may be limited to ±70-80° latitude)." });
             }
         }
 
         // ---------- 4) Diviner gece sıcaklığı ----------
-        Log("▶ LRO Diviner gece sıcaklığı verisi alınıyor...");
+        Log(L.T("▶ LRO Diviner gece sıcaklığı verisi alınıyor...", "▶ Fetching LRO Diviner nighttime temperature data..."));
         double? nightK = null;
         var stSrc = await GetSourceAsync(Config.DivinerBaseUrl, Config.DivinerSoilTemperature);
         if (stSrc != null)
@@ -133,21 +133,21 @@ public sealed class LandingNavigator : IDisposable
                 if (!double.IsNaN(v) && v > 40 && v < 300)
                 {
                     nightK = v;
-                    ev.DataSources.Add($"LRO Diviner gece regolit sıcaklığı — {stSrc.ImageUrl}");
+                    ev.DataSources.Add($"LRO Diviner nighttime regolith temperature — {stSrc.ImageUrl}");
                 }
             }
         }
 
         // ---------- 5) Hesaplamalar ----------
-        Log("▶ Güneş, sıcaklık ve iletişim analizi yapılıyor...");
+        Log(L.T("▶ Güneş, sıcaklık ve iletişim analizi yapılıyor...", "▶ Analyzing sunlight, temperature and communication..."));
         ev.Sun = SolarAnalyzer.Analyze(site, ev.Horizon!, ev.EvaluatedAtUtc);
         ev.Thermal = ThermalAnalyzer.Analyze(site, ev.Terrain, nightK);
         ev.Communication = CommunicationAnalyzer.Analyze(site, ev.Horizon!);
 
         if (Math.Abs(site.LatitudeDeg) > 80)
-            ev.Warnings.Add("Kutup bölgesi (>80°): silindirik projeksiyon bozulur, kutup stereografik veriler daha doğru sonuç verir.");
+            ev.WarningTexts.Add(new[] { "Kutup bölgesi (>80°): silindirik projeksiyon bozulur, kutup stereografik veriler daha doğru sonuç verir.", "Polar region (>80°): the cylindrical projection is distorted; polar stereographic data would be more accurate." });
         if (Math.Abs(site.LongitudeEastDeg) > 90 && Math.Abs(site.LongitudeEastDeg) < 270)
-            ev.Warnings.Add("Seçilen nokta Ay'ın uzak yüzünde (Dünya'dan görünmeyen yüz).");
+            ev.WarningTexts.Add(new[] { "Seçilen nokta Ay'ın uzak yüzünde (Dünya'dan görünmeyen yüz).", "The selected site is on the far side of the Moon (never visible from Earth)." });
 
         SuitabilityScorer.Score(ev, profile);
         return ev;
@@ -166,7 +166,7 @@ public sealed class LandingNavigator : IDisposable
         var src = await GetSourceAsync(Config.DivinerBaseUrl, Config.DivinerRockAbundanceGlobal);
         if (src == null) return false;
         const int chunkRows = 480;   // 8'in katı: her harita hücresi tek parçaya düşer
-        Log($"Küresel kaya haritası indiriliyor (~{src.Lines * src.LineBytes / 1048576.0:F0} MB, yalnızca ilk seferde)...");
+        Log(L.T($"Küresel kaya haritası indiriliyor (~{src.Lines * src.LineBytes / 1048576.0:F0} MB, yalnızca ilk seferde)...", $"Downloading global rock map (~{src.Lines * src.LineBytes / 1048576.0:F0} MB, first time only)..."));
         try
         {
             for (int r = 0; r < src.Lines; r += chunkRows)
@@ -176,12 +176,12 @@ public sealed class LandingNavigator : IDisposable
                 progress?.Report(Math.Min(1.0, (double)(r + chunkRows) / src.Lines));
             }
             map.FinishRocks();
-            Log("Küresel kaya haritası eklendi.");
+            Log(L.T("Küresel kaya haritası eklendi.", "Global rock map added."));
             return true;
         }
         catch (Exception ex)
         {
-            Log($"UYARI: küresel kaya haritası okunamadı → {ex.Message}");
+            Log(L.T($"UYARI: küresel kaya haritası okunamadı → {ex.Message}", $"WARNING: could not read global rock map → {ex.Message}"));
             return false;
         }
     }

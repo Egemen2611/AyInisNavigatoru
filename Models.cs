@@ -73,6 +73,7 @@ public sealed class ThermalResult
     public double LandingWindowTemperatureK { get; set; }
     public double NightTemperatureK { get; set; }
     public string NightSource { get; set; } = "";
+    public bool NightIsMeasured { get; set; }
 }
 
 public sealed class RockResult
@@ -120,5 +121,7 @@ public sealed class SiteEvaluation
     public string Verdict { get; set; } = "";
     public List<string> HardLimitViolations { get; set; } = new();
     public List<string> Warnings { get; set; } = new();
+    /// <summary>Analiz sırasında oluşan uyarılar, iki dilde: [0] Türkçe, [1] İngilizce</summary>
+    public List<string[]> WarningTexts { get; set; } = new();
     public List<string> DataSources { get; set; } = new();
 }
