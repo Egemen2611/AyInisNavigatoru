@@ -1,0 +1,188 @@
+{
+  "Site": {
+    "Name": "Selected site (10.468, 6.479)",
+    "LatitudeDeg": 10.468335047411838,
+    "LongitudeEastDeg": 6.4787721122109385,
+    "Lon360": 6.478772112210947
+  },
+  "ProfileName": "Balanced (standard)",
+  "EvaluatedAtUtc": "2026-11-15T12:51:38.3662918Z",
+  "Terrain": {
+    "DemProduct": "LDEM_128",
+    "PixelSizeM": 236.90117518866782,
+    "ElevationM": -802.25,
+    "SlopeAtSiteDeg": 2.8664468847610056,
+    "AspectAtSiteDeg": 354.7737820487427,
+    "SlopeMeanDeg": 4.467978131171263,
+    "SlopeP90Deg": 7.050831290767514,
+    "SlopeMaxDeg": 10.099364808622482,
+    "PercentOver10Deg": 0.4424778761061947,
+    "PercentOver15Deg": 0,
+    "RoughnessRmsM": 23.444060497848522,
+    "LocalReliefM": 575,
+    "TerrainType": "Transition zone (mare edge or plain)",
+    "EllipseRadiusM": 2000,
+    "CraterSearchRadiusM": 5000,
+    "Craters": [],
+    "CraterDensityPer100Km2": 0,
+    "SiteInsideCrater": false,
+    "NearestCraterRimDistanceM": "NaN"
+  },
+  "Horizon": {
+    "DemProduct": "LDEM_64",
+    "ElevationDeg": [
+      0.12675721216794983,
+      -0.8462030472704014,
+      -0.8025437899853021,
+      -0.4364459480258627,
+      0.37030291394652,
+      0.5686962338240584,
+      0.7683221195708492,
+      0.9675573869550806,
+      0.5914091769236234,
+      -0.07871020025273469,
+      0.21255226751468295,
+      0.8179614531583119,
+      1.5633491174074092,
+      2.3237970034022424,
+      2.6217780176837735,
+      3.44468429367588,
+      3.8855993790043386,
+      5.055441023899839,
+      6.135395709625936,
+      5.370244513410794,
+      4.298436015719667,
+      3.8873732997469146,
+      3.5943309566019757,
+      4.452058467721683,
+      6.090375621010125,
+      6.475235451958023,
+      5.922470835237803,
+      5.202640658032258,
+      5.043595082792474,
+      4.80212029513848,
+      4.4126189387985635,
+      3.161783438429439,
+      2.019839057401829,
+      0.8483393260830188,
+      0.8349826400977671,
+      0.2790667480732648
+    ],
+    "IsFlatAssumption": false
+  },
+  "Sun": {
+    "NoonElevationDeg": 79.53166495258816,
+    "IlluminatedFraction": 0.48680555555555555,
+    "FlatTerrainFraction": 0.5020833333333333,
+    "DaylightEarthDays": 14.37565471246736,
+    "SunriseDelayHours": 0,
+    "SunsetAdvanceHours": 10.33570609855,
+    "CurrentSunElevationDeg": -14.746017799937905,
+    "CurrentlyDaylight": false,
+    "NextLandingWindowStartUtc": "2026-11-17T08:40:01.8050391Z",
+    "NextLandingWindowEndUtc": "2026-11-18T10:15:37.2422604Z",
+    "LandingWindowFound": true
+  },
+  "Thermal": {
+    "NoonTemperatureK": 383.3502480239966,
+    "LandingWindowTemperatureK": 222.58606919315218,
+    "NightTemperatureK": 104.56032721961571,
+    "NightSource": "Model",
+    "NightIsMeasured": false
+  },
+  "Rocks": {
+    "RockAbundanceAtSite": 0.002097050193697214,
+    "RockAbundanceMean": 0.0024778761703158373,
+    "RockAbundanceMax": 0.004999999888241291
+  },
+  "Communication": {
+    "EarthElevationMeanDeg": 77.70805034156913,
+    "EarthElevationMinDeg": 67.64554044948447,
+    "EarthElevationMaxDeg": 86.19210493351143,
+    "EarthAzimuthDeg": 212.00600887424517,
+    "TerrainHorizonTowardEarthDeg": 3.828588745659081,
+    "WorstCaseMarginDeg": 64.01465801135784,
+    "OneWayLightTimeS": 1.2822203819416966,
+    "EarthAlwaysVisible": true,
+    "EarthNeverVisible": false
+  },
+  "Criteria": [
+    {
+      "Name": "Surface slope",
+      "Weight": 25,
+      "Score": 94.56746239596211,
+      "Summary": "Site: 2.9°, ellipse P90: 7.1°",
+      "Details": [
+        "Landing ellipse (r = 2.0 km) mean slope: 4.5°, maximum: 10.1°",
+        "Area steeper than 10°: 0.4%  |  steeper than 15°: 0.0%",
+        "Slope direction (aspect): 355° (N)",
+        "Note: computed at 237 m resolution; slopes at lander scale (1-10 m) may be higher."
+      ]
+    },
+    {
+      "Name": "Crater and rock density",
+      "Weight": 20,
+      "Score": 98.5132742978105,
+      "Summary": "Rocks: 98 pts, craters: 100 pts",
+      "Details": [
+        "Diviner rock abundance (area covered by rocks ≥1 m): site 0.21%, mean 0.25%, maximum 0.50%",
+        "For comparison: lunar average ≈ 0.4%; surroundings of young craters can reach 5-30%.",
+        "Craters detected in LOLA data (D ≥ ~0.9 km): 0 within 5 km → 0.0 craters / 100 km²"
+      ]
+    },
+    {
+      "Name": "Sunlight",
+      "Weight": 15,
+      "Score": 94.93874728314563,
+      "Summary": "Noon Sun elevation 79.5°, daylight 14.4 Earth days",
+      "Details": [
+        "Fraction of time in sunlight: 48.7% (flat terrain: 50.2%)",
+        "Due to terrain, sunrise is delayed by 0.0 h and sunset comes 10.3 h early",
+        "Solar panel output (noon, flat panel): ~98% of perpendicular"
+      ]
+    },
+    {
+      "Name": "Temperature",
+      "Weight": 10,
+      "Score": 63.533452270145176,
+      "Summary": "Noon 383 K (110 °C), night 105 K (-169 °C)",
+      "Details": [
+        "Surface temperature at landing time (Sun ~12°): 223 K (-51 °C)",
+        "Night data source: Model (Diviner data unavailable)",
+        "Daytime value from the radiative-equilibrium model (εσT⁴ = (1−A)·S·cos i); agrees with Diviner within ±10 K."
+      ]
+    },
+    {
+      "Name": "Communication with Earth",
+      "Weight": 15,
+      "Score": 100,
+      "Summary": "Earth elevation mean 77.7° (with libration 67.6°…86.2°)",
+      "Details": [
+        "Direction of Earth (azimuth): 212° (SSW); terrain horizon in that direction: 3.8°",
+        "Worst-case margin above the horizon: 64.0°",
+        "One-way signal delay: 1.28 s (round trip 2.56 s)"
+      ]
+    },
+    {
+      "Name": "Elevation and terrain",
+      "Weight": 15,
+      "Score": 60.08773621030552,
+      "Summary": "Elevation -802 m, roughness 23.4 m RMS, relief 575 m",
+      "Details": [
+        "Terrain type (estimate): Transition zone (mare edge or plain)",
+        "Elevation is relative to the lunar reference sphere (R = 1737.4 km).",
+        "Difference between highest and lowest point within 5 km: 575 m"
+      ]
+    }
+  ],
+  "OverallScore": 87.9518382095848,
+  "Verdict": "HIGHLY SUITABLE",
+  "HardLimitViolations": [],
+  "Warnings": [],
+  "WarningTexts": [],
+  "DataSources": [
+    "LRO LOLA LDEM_128 (Smith vd. 2010) — https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_128.IMG",
+    "LRO LOLA LDEM_64 — https://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/LDEM_64.IMG",
+    "LRO Diviner rock abundance (Bandfield et al. 2011) — https://pds-geosciences.wustl.edu/lro/lro-l-dlre-4-rdr-v1/lrodlr_1001/data/gdr_l3/cylindrical/img/DGDR_RA_AVG_CYL_128_IMG.IMG"
+  ]
+}
